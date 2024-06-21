@@ -36,12 +36,10 @@ export default defineConfig({
     }),
   ],
   css: {
-    loaderOptions: {
-      sass: {
-        // 公共scss参数
-        data: `@import "@/styles/global.scss";`,
+    preprocessorOptions: {
+      scss: {
         // 公共scss
-        additionalData: `@import "@/assets/style/main.scss";`,
+        additionalData: `@import "src/assets/styles/global.scss";`,
       },
     },
   },

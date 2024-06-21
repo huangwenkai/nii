@@ -1,9 +1,10 @@
 <script setup></script>
 <template>
-  <main>
-    123
-    <button>按钮</button>
-    <Logo />
-  </main>
+  <main></main>
 </template>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+main {
+  width: 100%;
+  height: 100%;
+}
+</style>
