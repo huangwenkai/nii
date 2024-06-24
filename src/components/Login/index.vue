@@ -16,6 +16,7 @@ const pwalist = ref([
   { n: 9, n1: "WXYZ" },
 ]);
 const pwa = ref([]);
+const pwaErr = ref("");
 function getDayJsTime() {
   return dayjs(system.systemsData.time);
 }
@@ -25,10 +26,12 @@ function getDay() {
 }
 function goHome() {
   if (type.value === 0) {
+    pwa.value.length = 0;
     type.value = 1;
   } else {
-    if (pwa.length) return;
+    if (pwa.value.length) return;
     type.value = 0;
+    pwaErr.value = "";
   }
 }
 function init() {
@@ -38,10 +41,13 @@ function pushPwa(n) {
   pwa.value.push(n);
   if (pwa.value.length === 6) {
     if (pwa.value.join("") === "111111") {
+      pwaErr.value = "";
       system.setSystemsData({ token: !system.systemsData.token });
       pwa.value.length = 0;
+      type.value = 0;
     } else {
       pwa.value.length = 0;
+      pwaErr.value = "密码错误";
     }
   }
 }
@@ -65,7 +71,7 @@ onMounted(() => {
     </div>
     <div class="login-pwa" v-else-if="type === 1">
       <div class="pwa-index">
-        <p>输入密码</p>
+        <p :class="{ err: pwaErr }">{{ pwaErr || "输入密码" }}</p>
         <span v-for="t in 6" :class="{ 'pwa-active': t <= pwa.length }"></span>
       </div>
       <div class="pwa-li pwa-num" v-for="t in pwalist" @click.stop="pushPwa(t.n)">
@@ -128,6 +134,11 @@ onMounted(() => {
         padding-bottom: 10px;
         font-weight: 300;
       }
+      .err {
+        color: $c3;
+        font-weight: bold;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+      }
       span {
         display: inline-block;
         margin: 10px;
@@ -159,6 +170,20 @@ onMounted(() => {
       font-weight: 300;
       padding-top: 14px;
       cursor: pointer;
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        opacity: 0.4;
+        transition: 0.3s;
+      }
+      &:active::after {
+        box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.05);
+        opacity: 1;
+      }
 
       .py-text {
         line-height: 1;
