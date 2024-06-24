@@ -35,7 +35,6 @@ function init() {
   type.value = 0;
 }
 function pushPwa(n) {
-  console.log(n);
   pwa.value.push(n);
   if (pwa.value.length === 6) {
     if (pwa.value.join("") === "111111") {
