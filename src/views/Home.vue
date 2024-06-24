@@ -1,6 +1,8 @@
-<script setup></script>
+<script setup>
+const system = useSystemsStore();
+</script>
 <template>
-  <main></main>
+  <main @click="system.setSystemsData({ token: !system.systemsData.token })"></main>
 </template>
 <style scoped lang="scss">
 main {

@@ -9,11 +9,11 @@ const router = createRouter({
       name: "home",
       component: HomeView,
     },
-    {
-      path: "/login",
-      name: "login",
-      component: () => import("../views/Login.vue"),
-    },
+    // {
+    //   path: "/login",
+    //   name: "login",
+    //   component: () => import("../views/Login.vue"),
+    // },
   ],
   scrollBehavior(to, from, savedPosition) {
     if (to.path !== from.path) {
