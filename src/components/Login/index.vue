@@ -17,6 +17,7 @@ const pwalist = ref([
 ]);
 const pwa = ref([]);
 const pwaErr = ref("");
+let errST = null;
 function getDayJsTime() {
   return dayjs(system.systemsData.time);
 }
@@ -24,29 +25,62 @@ function getDay() {
   let days = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
   return days[getDayJsTime().day()];
 }
-function goHome() {
-  if (type.value === 0) {
-    pwa.value.length = 0;
-    type.value = 1;
-  } else {
-    if (pwa.value.length) return;
-    type.value = 0;
-    pwaErr.value = "";
-  }
-}
 function init() {
   type.value = 0;
+  system.setGtEvents({
+    // 上划
+    upwardSliding(offset) {
+      if (type.value === 0) {
+        if (system.systemsData.token) {
+          system.setSystemsData({ isOpenWait: true });
+          return;
+        }
+        pwaErr.value = "";
+        pwa.value.length = 0;
+        type.value = 1;
+      }
+    },
+    // 下划
+    downwardSliding(offset) {
+      if (type.value === 1) {
+        pwaErr.value = "";
+        pwa.value.length = 0;
+        type.value = 0;
+      }
+    },
+  });
+  document.onkeydown = function (event) {
+    let key = event.keyCode;
+    if (key === 32) {
+      if (type.value === 0) {
+        pwaErr.value = "";
+        pwa.value.length = 0;
+        type.value = 1;
+      } else {
+        pwaErr.value = "";
+        pwa.value.length = 0;
+        type.value = 0;
+      }
+    }
+  };
 }
 function pushPwa(n) {
   pwa.value.push(n);
   if (pwa.value.length === 6) {
     if (pwa.value.join("") === "111111") {
       pwaErr.value = "";
-      system.setSystemsData({ token: !system.systemsData.token });
+      system.setSystemsData({ isOpenWait: true, token: "111111" });
       pwa.value.length = 0;
       type.value = 0;
     } else {
-      pwa.value.length = 0;
+      if (errST) {
+        clearTimeout(errST);
+        errST = null;
+      }
+      errST = setTimeout(() => {
+        pwa.value.length = 0;
+        pwaErr.value = "";
+      }, 1000);
       pwaErr.value = "密码错误";
     }
   }
@@ -56,19 +90,22 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div class="login-box" :class="system.systemsData.token ? 'login-in' : 'login-out'" @click="goHome">
+  <div class="login-box" :class="system.systemsData.isOpenWait ? 'login-in' : 'login-out'">
+    <!-- 待机界面 -->
     <div class="login-time" v-if="type === 0">
-      <icon-lock />
+      <icon-unlock v-if="system.systemsData.token" />
+      <icon-lock v-else />
       <p>
         {{ getDayJsTime().format("HH:mm") }}
       </p>
       <span class="pr[20px]"> {{ getDayJsTime().format("M月D日") }} </span>
       <span>{{ getDay() }}</span>
       <div class="ts">
-        <div class="ts-text">按下空格键打开主屏幕</div>
+        <div class="ts-text">按空格键或上划打开主屏幕</div>
         <icon-home />
       </div>
     </div>
+    <!-- 输入密码界面 -->
     <div class="login-pwa" v-else-if="type === 1">
       <div class="pwa-index">
         <p :class="{ err: pwaErr }">{{ pwaErr || "输入密码" }}</p>
@@ -87,7 +124,7 @@ onMounted(() => {
 <style scoped lang="scss">
 @keyframes show-ac {
   from {
-    transform: translateY(-20px);
+    transform: translateY(-30px);
     opacity: 0;
   }
   to {
@@ -97,7 +134,7 @@ onMounted(() => {
 }
 @keyframes show-ac-pwa {
   from {
-    transform: translateY(-60%) translateX(-50%);
+    transform: translateY(-40%) translateX(-50%);
     opacity: 0;
   }
   to {
@@ -107,6 +144,7 @@ onMounted(() => {
 }
 .login-box {
   position: absolute;
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;
@@ -116,7 +154,6 @@ onMounted(() => {
   transition: 0.8s;
   text-align: center;
   color: white;
-
   .login-pwa {
     position: absolute;
     display: flex;
@@ -171,7 +208,6 @@ onMounted(() => {
       padding-top: 14px;
       cursor: pointer;
       position: relative;
-
       &::after {
         content: "";
         position: absolute;
@@ -184,7 +220,6 @@ onMounted(() => {
         box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.05);
         opacity: 1;
       }
-
       .py-text {
         line-height: 1;
         font-size: 12px;
@@ -201,7 +236,6 @@ onMounted(() => {
       opacity: 0;
     }
   }
-
   .login-time {
     height: 100%;
     width: 100%;
@@ -211,7 +245,6 @@ onMounted(() => {
     font-size: 20px;
     letter-spacing: 4px;
     animation: show-ac 0.8s ease-in-out;
-
     p {
       font-size: 100px;
     }
@@ -228,13 +261,11 @@ onMounted(() => {
     }
   }
 }
-
 .login-in {
   top: -100%;
   backdrop-filter: blur(0);
   background-color: rgba(0, 0, 0, 0.1);
 }
-
 .login-out {
   top: 0;
   backdrop-filter: blur(50px);

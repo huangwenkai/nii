@@ -2,7 +2,7 @@
 const system = useSystemsStore();
 </script>
 <template>
-  <main @click="system.setSystemsData({ token: !system.systemsData.token })"></main>
+  <main></main>
 </template>
 <style scoped lang="scss">
 main {
