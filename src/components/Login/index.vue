@@ -1,8 +1,9 @@
 <script setup>
 import dayjs from "dayjs";
-import { ref } from "vue";
-import { onMounted } from "vue";
 const system = useSystemsStore();
+const { closeApp } = useDesktopStore();
+const route = useRoute();
+console.log(route);
 const type = ref(0); // 0 = 待机页 1 = 输入密码
 const pwalist = ref([
   { n: 1, n1: "" },
@@ -33,11 +34,15 @@ function init() {
       if (type.value === 0) {
         if (system.systemsData.token) {
           system.setSystemsData({ isOpenWait: true });
-          return;
+        } else {
+          pwaErr.value = "";
+          pwa.value.length = 0;
+          type.value = 1;
         }
-        pwaErr.value = "";
-        pwa.value.length = 0;
-        type.value = 1;
+      }
+
+      if (route.path != "/") {
+        closeApp();
       }
     },
     // 下划
@@ -47,15 +52,22 @@ function init() {
         pwa.value.length = 0;
         type.value = 0;
       }
+      if (route.path == "/") {
+        system.setSystemsData({ isOpenWait: false });
+      }
     },
   });
   document.onkeydown = function (event) {
     let key = event.keyCode;
     if (key === 32) {
       if (type.value === 0) {
-        pwaErr.value = "";
-        pwa.value.length = 0;
-        type.value = 1;
+        if (system.systemsData.token) {
+          system.setSystemsData({ isOpenWait: true });
+        } else {
+          pwaErr.value = "";
+          pwa.value.length = 0;
+          type.value = 1;
+        }
       } else {
         pwaErr.value = "";
         pwa.value.length = 0;

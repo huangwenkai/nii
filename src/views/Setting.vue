@@ -2,7 +2,7 @@
 const system = useSystemsStore();
 </script>
 <template>
-  <main>123213123</main>
+  <main>SETTING</main>
 </template>
 <style scoped lang="scss">
 main {

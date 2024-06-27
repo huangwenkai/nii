@@ -1,20 +1,16 @@
 <script setup>
-import AppButton from "./AppButton.vue";
 import btn1 from "@/assets/img/drinks/MintLemon1.svg";
-
+import btn2 from "@/assets/img/drinks/MintLemon2.svg";
+import btn3 from "@/assets/img/drinks/MintLemon3.svg";
+import btn4 from "@/assets/img/drinks/MintLemon4.svg";
 const system = useSystemsStore();
-const btnRef = ref(null);
-const viewLeft = ref(0);
-const viewTop = ref(0);
-const isOpenApp = ref(false);
-function openApp() {
-  console.log(btnRef.value);
-  return
-  isOpenApp.value = true;
-  let btnXY = btnRef.value.getBoundingClientRect();
-  viewLeft.value = btnXY.left;
-  viewTop.value = btnXY.top;
-}
+const { openAppInfo, openApp } = useDesktopStore();
+const docks = ref([
+  { appName: "", appUrl: "/home", appIcon: btn1, id: toolsGenerateRandomString(32) },
+  { appName: "", appUrl: "/setting", appIcon: btn2, id: toolsGenerateRandomString(32) },
+  { appName: "", appUrl: "/home", appIcon: btn3, id: toolsGenerateRandomString(32) },
+  { appName: "", appUrl: "/home", appIcon: btn4, id: toolsGenerateRandomString(32) },
+]);
 </script>
 <template>
   <div class="desktop">
@@ -24,11 +20,13 @@ function openApp() {
     <div class="apps"></div>
     <!-- 底部应用坞 -->
     <div class="docks">
-      <AppButton :icon="btn1" @click="openApp" ref="btnRef" />
+      <AppButton class="docks-li" :icon="t.appIcon" :id="t.id" @click="openApp(t)" ref="btnRef" v-for="t in docks" />
     </div>
 
-    <div class="app-view" v-if="isOpenApp" :class="openClass" :style="'left:' + viewLeft + 'px;top: ' + viewTop + 'px;'">
-      <img :src="icon" alt="app-icon" v-if="icon" />
+    <!-- 打开的App -->
+    <div class="app-view" v-if="openAppInfo.isOpenApp" :class="openAppInfo.openClass" :style="'left:' + openAppInfo.viewLeft + 'px;top: ' + openAppInfo.viewTop + 'px;'">
+      <img :src="openAppInfo.appIcon" v-if="openAppInfo.appIcon" />
+      <RouterView class="view-box" />
     </div>
   </div>
 </template>
@@ -45,7 +43,7 @@ function openApp() {
     width: 80%;
     height: calc(100% - 70px - 120px);
     position: absolute;
-    top: 50px;
+    top: 60px;
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(255, 255, 255, 0.1);
@@ -80,6 +78,7 @@ function openApp() {
     width: 60px;
     height: 60px;
     border-radius: 15px;
+    overflow: hidden;
     background-color: rgba(255, 255, 255, 0.2);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     transition: 0.3s;
@@ -87,13 +86,46 @@ function openApp() {
     img {
       width: 100%;
       height: 100%;
+      transition-delay: 500ms;
+      transition: opacity 0.5s;
+    }
+    .view-box {
+      opacity: 0;
+      transition: opacity 0.5s;
     }
   }
-  .open-app {
+  .open-app{
     width: calc(100vw - 40px);
     height: calc(100vh - 40px);
-    left: 20px !important;
-    top: 20px !important;
+    left: 0px !important;
+    top: 0px !important;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(40px);
+    z-index: 800;
+    img {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .view-box {
+      opacity: 1;
+    }
+  }
+
+  .close-app{
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(40px);
+    z-index: 800;
+    img {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .view-box {
+      opacity: 1;
+    }
   }
 }
 </style>
