@@ -9,11 +9,11 @@ export const useDesktopStore = defineStore("desktop", () => {
     appIcon: null, // 打开App的图标
   });
   function openApp(t) {
-    if (t.appUrl) router.push(t.appUrl);
+    if (t.appUrl) router.replace(t.appUrl);
     if (t.appIcon) openAppInfo.value.appIcon = t.appIcon;
     let btnXY = document.getElementById(t.id).getBoundingClientRect();
-    openAppInfo.value.viewLeft = btnXY.left - 20;
-    openAppInfo.value.viewTop = btnXY.top - 20;
+    openAppInfo.value.viewLeft = parseInt(btnXY.left) - 20;
+    openAppInfo.value.viewTop = parseInt(btnXY.top) - 20;
     openAppInfo.value.isOpenApp = true;
     setTimeout(() => {
       openAppInfo.value.openClass = "open-app";
@@ -25,7 +25,7 @@ export const useDesktopStore = defineStore("desktop", () => {
       openAppInfo.value.isOpenApp = false;
       openAppInfo.value.openClass = "";
       router.replace("/");
-    }, 50000);
+    }, 300);
   }
   return {
     openAppInfo,

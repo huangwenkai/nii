@@ -46,8 +46,8 @@ const docks = ref([
     top: 60px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 50px;
+    // background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
   }
   .docks {
     backdrop-filter: blur(20px);
@@ -87,18 +87,19 @@ const docks = ref([
       width: 100%;
       height: 100%;
       transition-delay: 500ms;
-      transition: opacity 0.5s;
+      transition: opacity 0.3s;
     }
     .view-box {
       opacity: 0;
-      transition: opacity 0.5s;
+      transition: opacity 0.3s;
     }
   }
-  .open-app{
+  .open-app {
     width: calc(100vw - 40px);
     height: calc(100vh - 40px);
     left: 0px !important;
     top: 0px !important;
+    border-radius: 0px;
     background-color: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(40px);
     z-index: 800;
@@ -113,18 +114,18 @@ const docks = ref([
     }
   }
 
-  .close-app{
+  .close-app {
     background-color: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(40px);
     z-index: 800;
     img {
       position: absolute;
-      opacity: 0;
+      opacity: 1;
       width: 100%;
       height: 100%;
     }
     .view-box {
-      opacity: 1;
+      opacity: 0;
     }
   }
 }
