@@ -1,0 +1,1 @@
+import{_ as a,r as s,c as r,a as t,b as c,o}from"./index-BwrkWvKE.js";const _=["src"],n={__name:"Www",setup(w){const e=s("https://www.baidu.com");return(f,m)=>(o(),r("main",null,[t("iframe",{src:c(e),frameborder:"0"},null,8,_)]))}},d=a(n,[["__scopeId","data-v-9f0998de"]]);export{d as default};

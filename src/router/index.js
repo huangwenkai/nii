@@ -18,6 +18,11 @@ const router = createRouter({
       name: "setting",
       component: () => import("@/views/Setting.vue"),
     },
+    {
+      path: "/www",
+      name: "www",
+      component: () => import("@/views/Www.vue"),
+    },
   ],
   scrollBehavior(to, from, savedPosition) {
     if (to.path !== from.path) {

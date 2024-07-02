@@ -1,9 +1,7 @@
 <script setup>
-import dayjs from "dayjs";
 const system = useSystemsStore();
 const { closeApp } = useDesktopStore();
 const route = useRoute();
-console.log(route);
 const type = ref(0); // 0 = 待机页 1 = 输入密码
 const pwalist = ref([
   { n: 1, n1: "" },
@@ -19,13 +17,6 @@ const pwalist = ref([
 const pwa = ref([]);
 const pwaErr = ref("");
 let errST = null;
-function getDayJsTime() {
-  return dayjs(system.systemsData.time);
-}
-function getDay() {
-  let days = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
-  return days[getDayJsTime().day()];
-}
 function init() {
   type.value = 0;
   system.setGtEvents({
@@ -108,10 +99,10 @@ onMounted(() => {
       <icon-unlock v-if="system.systemsData.token" />
       <icon-lock v-else />
       <p>
-        {{ getDayJsTime().format("HH:mm") }}
+        {{ system.getDayJsTime().format("HH:mm") }}
       </p>
-      <span class="pr[20px]"> {{ getDayJsTime().format("M月D日") }} </span>
-      <span>{{ getDay() }}</span>
+      <span class="pr[20px]"> {{ system.getDayJsTime().format("M月D日") }} </span>
+      <span>{{ system.getDay() }}</span>
       <div class="ts">
         <div class="ts-text">按空格键或上划打开主屏幕</div>
         <icon-home />

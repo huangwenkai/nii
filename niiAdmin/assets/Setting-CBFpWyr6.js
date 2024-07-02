@@ -1,0 +1,1 @@
+import{_ as e,u as t,c as a,o as s}from"./index-BwrkWvKE.js";const o={__name:"Setting",setup(_){return t(),(c,n)=>(s(),a("main",null,"SETTING"))}},p=e(o,[["__scopeId","data-v-a1a61e05"]]);export{p as default};

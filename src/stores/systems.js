@@ -1,4 +1,5 @@
 import GestureJs from "@/utils/gesture";
+import dayjs from "dayjs";
 export const useSystemsStore = defineStore("systems", () => {
   // 定时器 1秒一次 更新时间
   let timeSI;
@@ -30,36 +31,7 @@ export const useSystemsStore = defineStore("systems", () => {
       systemsData.value.time = new Date();
     }, 1000);
 
-    gt = new GestureJs({
-      events: {
-        upwardSliding(offset) {
-          console.log("上滑了:", offset);
-        },
-        downwardSliding(offset) {
-          console.log("下滑了:", offset);
-        },
-        leftSliding(offset) {
-          console.log("左滑了:", offset);
-        },
-        rightSliding(offset) {
-          console.log("右滑了:", offset);
-        },
-        upwardScroll() {
-          console.log("鼠标滚动向上");
-        },
-        downwardScroll() {
-          console.log("鼠标滚动向下");
-        },
-        // _pinchZoom(zoomType) {
-        //   if (zoomType == "enlarge") {
-        //     console.log("放大");
-        //   }
-        //   if (zoomType == "narrow") {
-        //     console.log("缩小");
-        //   }
-        // },
-      },
-    });
+    gt = new GestureJs();
   }
 
   // 设置系统数据
@@ -73,6 +45,17 @@ export const useSystemsStore = defineStore("systems", () => {
     gt.setEvents(events);
   }
 
+  // 获取dayjs系统时间
+  function getDayJsTime() {
+    return dayjs(systemsData.value.time);
+  }
+
+  // 获取星期几
+  function getDay() {
+    let days = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+    return days[getDayJsTime().day()];
+  }
+
   systemsInit();
 
   return {
@@ -80,5 +63,7 @@ export const useSystemsStore = defineStore("systems", () => {
     setSystemsData,
     systemsInit,
     setGtEvents,
+    getDayJsTime,
+    getDay,
   };
 });

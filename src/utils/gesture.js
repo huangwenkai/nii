@@ -34,7 +34,7 @@ export default class GestureJs {
   constructor(options) {
     const opt = { ...defaultOptions, ...options };
     this.el = typeof opt.el === "string" ? document.querySelector(opt.el) : opt.el;
-    this.events = opt.events;
+    this.events = opt.events || {};
     this.triggerNum = opt.triggerNum;
     this.config = opt.config;
     this.init();
@@ -43,9 +43,9 @@ export default class GestureJs {
     this.events = { ...this.events, ...e };
   }
   init() {
-    if (!Object.keys(this.events).length) {
-      throw new Error("请传递手势事件");
-    }
+    // if (!Object.keys(this.events).length) {
+    //   throw new Error("请传递手势事件");
+    // }
     if (isMobileBrowser()) {
       this.observeTouchGesture();
     } else {
@@ -180,6 +180,7 @@ export default class GestureJs {
    * 向上滑动
    */
   _upwardSliding(offset) {
+    console.log("上滑:", offset);
     this.events.upwardSliding && this.events.upwardSliding(offset);
   }
 
@@ -187,6 +188,7 @@ export default class GestureJs {
    * 向下滑动
    */
   _downwardSliding(offset) {
+    console.log("下滑:", offset);
     this.events.downwardSliding && this.events.downwardSliding(offset);
   }
 
@@ -194,6 +196,7 @@ export default class GestureJs {
    * 向左滑动
    */
   _leftSliding(offset) {
+    console.log("左滑:", offset);
     this.events.leftSliding && this.events.leftSliding(offset);
   }
 
@@ -201,6 +204,7 @@ export default class GestureJs {
    * 向右滑动
    */
   _rightSliding(offset) {
+    console.log("右滑:", offset);
     this.events.rightSliding && this.events.rightSliding(offset);
   }
 
@@ -212,6 +216,7 @@ export default class GestureJs {
    * 鼠标滚动向上
    */
   _upwardScroll() {
+    console.log("鼠标滚动向上");
     this.events.upwardScroll && this.events.upwardScroll();
   }
 
@@ -219,6 +224,7 @@ export default class GestureJs {
    * 鼠标滚动向下
    */
   _downwardScroll() {
+    console.log("鼠标滚动向下");
     this.events.downwardScroll && this.events.downwardScroll();
   }
 
